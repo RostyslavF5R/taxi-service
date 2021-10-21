@@ -20,11 +20,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throws AuthenticationException {
         logger.info(" Method login was called. User login: {}", login);
         Optional<Driver> driver = driverService.findByLogin(login);
-        if (driver.isEmpty() || !driver.get().getPassword().equals(password)) {
-            logger.error("Incorrect username or password. User login: {}", login);
-            throw new AuthenticationException("Incorrect username or password");
+        if (driver.isPresent() && driver.get().getPassword().equals(password)) {
+            return driver.get();
         }
-        return driver.get();
+        logger.error("Incorrect username or password. User login: {}", login);
+        throw new AuthenticationException("Incorrect username or password");
     }
 }
 
